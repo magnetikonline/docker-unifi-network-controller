@@ -31,7 +31,7 @@ $ ./build.sh
 Alternatively, to pull a pre-built image from Docker Hub:
 
 ```sh
-$ docker pull magnetikonline/unifi-network-controller:5.11.39
+$ docker pull magnetikonline/unifi-network-controller:5.11.46
 ```
 
 Images are tagged with their UniFi Network Controller release version.
@@ -48,7 +48,7 @@ $ docker run \
 	--publish "8080:8080/tcp" \
 	--publish "8443:8443/tcp" \
 	--rm \
-	"magnetikonline/unifi-network-controller:5.11.39"
+	"magnetikonline/unifi-network-controller:5.11.46"
 ```
 
 Published ports are for the following functions:
@@ -78,7 +78,7 @@ $ docker run \
 	--publish "8080:8080/tcp" \
 	--publish "8443:8443/tcp" \
 	--rm \
-	"magnetikonline/unifi-network-controller:5.11.39"
+	"magnetikonline/unifi-network-controller:5.11.46"
 ```
 
 Or avoid all this boilerplate and use instead the [Controller utility](#controller-utility) outlined below.
@@ -106,7 +106,7 @@ optional arguments:
 # start the server
 $ ./controller.py start
 
-Starting server [magnetikonline/unifi-network-controller:5.11.39] as [unifi-network-controller-server]
+Starting server [magnetikonline/unifi-network-controller:5.11.46] as [unifi-network-controller-server]
 Running as container ID [ABCD...]
 ```
 
