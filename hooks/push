@@ -1,0 +1,4 @@
+#!/bin/bash -e
+
+. version
+docker push "$DOCKER_REPO:$UNIFI_VERSION"
