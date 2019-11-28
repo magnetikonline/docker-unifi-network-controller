@@ -11,6 +11,7 @@ Docker image and CLI management utility for a [UniFi Network Controller](https:/
 	- [Stopping](#stopping)
 	- [Backup](#backup)
 	- [Restore](#restore)
+- [Reference](#reference)
 
 ## Overview
 - Image components:
@@ -22,19 +23,19 @@ Docker image and CLI management utility for a [UniFi Network Controller](https:/
 - Python CLI utility for start/stop of controller and handy backup/restore tasks.
 
 ## Building
-To build an image with controller & MongoDB versions pinned to [`version`](version):
+To build the image with controller & MongoDB versions pinned to [`version`](version):
 
 ```sh
 $ ./build.sh
 ```
 
-Alternatively, to pull a pre-built image from Docker Hub:
+Alternatively, pull the pre-built image from Docker Hub:
 
 ```sh
-$ docker pull magnetikonline/unifi-network-controller:5.12.22
+$ docker pull magnetikonline/unifi-network-controller:5.12.35
 ```
 
-Images are tagged with their UniFi Network Controller release version.
+Images are tagged with their controller release version.
 
 ## Usage
 
@@ -48,7 +49,7 @@ $ docker run \
 	--publish "8080:8080/tcp" \
 	--publish "8443:8443/tcp" \
 	--rm \
-	"magnetikonline/unifi-network-controller:5.12.22"
+	"magnetikonline/unifi-network-controller:5.12.35"
 ```
 
 Published ports are for the following functions:
@@ -78,7 +79,7 @@ $ docker run \
 	--publish "8080:8080/tcp" \
 	--publish "8443:8443/tcp" \
 	--rm \
-	"magnetikonline/unifi-network-controller:5.12.22"
+	"magnetikonline/unifi-network-controller:5.12.35"
 ```
 
 Or avoid all this boilerplate and use instead the [Controller utility](#controller-utility) outlined below.
@@ -106,7 +107,7 @@ optional arguments:
 # start the server
 $ ./controller.py start
 
-Starting server [magnetikonline/unifi-network-controller:5.12.22] as [unifi-network-controller-server]
+Starting server [magnetikonline/unifi-network-controller:5.12.35] as [unifi-network-controller-server]
 Running as container ID [ABCD...]
 ```
 
@@ -121,7 +122,7 @@ Server has stopped
 ```
 
 ### Backup
-The backup operation takes the full contents of the controller data Docker volume (MongoDB database, firmware downloads, miscellaneous config) and creates a compressed tar archive, which can be used for a full restore.
+Takes full contents of the controller Docker data volume (including MongoDB database, firmware cache) and creates a compressed tar archive - which can then used for a [restore](#restore) operation.
 
 ```sh
 $ ./controller.py backup --file "/path/to/backup.tgz"
@@ -130,9 +131,9 @@ Backup successfully created at [/path/to/backup.tgz]
 ```
 
 ### Restore
-Complementing the backup operation, restore takes an existing backup tar archive and extracts contents into a fresh Docker data volume.
+Complementing the backup operation, takes a given archive and extracts contents into a new Docker data volume.
 
-**Note:** this _will_ clobber any existing controller data volume which may exist - use with care.
+**Note:** this _will_ destroy an existing data volume - use with care.
 
 ```sh
 $ ./controller.py restore --file "/path/to/backup.tgz"
@@ -141,3 +142,6 @@ Removed existing data volume [unifi-network-controller-data]
 Created volume [unifi-network-controller-data]
 Data volume successfully restored from [/path/to/backup.tgz]
 ```
+
+## Reference
+- [How to Install & Upgrade the UniFi Network Controller](https://help.ubnt.com/hc/en-us/articles/360012282453-UniFi-How-to-Install-Upgrade-the-UniFi-Network-Controller-Software).
