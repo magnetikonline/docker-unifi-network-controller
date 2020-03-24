@@ -11,4 +11,4 @@ docker build \
 	--build-arg "UNIFI_MD5SUM=$UNIFI_MD5SUM" \
 	--build-arg "UNIFI_VERSION=$UNIFI_VERSION" \
 	--tag "$DOCKER_REPOSITORY:$UNIFI_VERSION" \
-	"$DIRNAME"
+		"$DIRNAME"

@@ -11,7 +11,7 @@ JVM_OPTS=(
 )
 
 
-cd $BASEDIR
+cd "$BASEDIR"
 exec "$JAVA_HOME/jre/bin/java" \
 	${JVM_OPTS[@]} \
 	-jar "$BASEDIR/lib/ace.jar" \

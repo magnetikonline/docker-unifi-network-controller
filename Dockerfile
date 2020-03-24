@@ -6,9 +6,8 @@ ARG UNIFI_MD5SUM
 ARG UNIFI_VERSION
 ARG UNIFI_DEBFILE="unifi_sysvinit_all.deb"
 
-ENV DEBIAN_FRONTEND="noninteractive"
-
-RUN apt-get update && \
+RUN DEBIAN_FRONTEND="noninteractive" \
+	apt-get update && \
 	# install packages
 	# $UNIFI_DEBFILE requires [binutils java8-runtime-headless (openjdk-8-jre-headless) jsvc libcap2]
 	apt-get install --no-install-recommends --yes \
