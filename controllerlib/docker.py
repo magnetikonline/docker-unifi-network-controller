@@ -169,7 +169,7 @@ def _run_command(argument_list):
     return _RunCommandResult(result.returncode, result.stdout, result.stderr)
 
 
-class _RunCommandResult(object):
+class _RunCommandResult:
     def __init__(self, code, stdout, stderr):
         # store stdout/err lines as lists - if no lines, ensure to return empty list
         def split(output):
