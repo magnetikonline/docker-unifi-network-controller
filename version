@@ -1,5 +1,5 @@
 MONGODB_VERSION="3.4.20"
 
-# https://community.ui.com/releases/UniFi-Network-Controller-5-12-66/ac49e57b-6f38-4912-8455-940d3d487d00
-UNIFI_MD5SUM="cd2bc2f09154a61f0614cff7148eb447"
-UNIFI_VERSION="5.12.66"
+# https://community.ui.com/releases/UniFi-Network-Controller-5-12-72/9ac72983-5130-4f58-b3ba-909f4d4bb5f9
+UNIFI_MD5SUM="42bf01ef4e6d08e11b38037712a64fc1"
+UNIFI_VERSION="5.12.72"
