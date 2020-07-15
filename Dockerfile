@@ -9,10 +9,10 @@ ARG UNIFI_DEBFILE="unifi_sysvinit_all.deb"
 RUN DEBIAN_FRONTEND="noninteractive" \
 	apt-get update && apt-get --yes upgrade && \
 	# install packages
-	# $UNIFI_DEBFILE requires: binutils java8-runtime-headless (using openjdk-8-jre-headless) jsvc libcap2
+	# $UNIFI_DEBFILE requires: binutils java8-runtime-headless (using openjdk-8-jre-headless) jsvc libcap2 logrotate
 	apt-get --no-install-recommends --yes install \
 		ca-certificates curl \
-		binutils jsvc libcap2 openjdk-8-jre-headless \
+		binutils jsvc libcap2 logrotate openjdk-8-jre-headless \
 		gnupg2 && \
 	# add MongoDB apt repository
 	apt-key adv \
