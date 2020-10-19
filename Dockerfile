@@ -22,7 +22,7 @@ RUN DEBIAN_FRONTEND="noninteractive" \
 		>/etc/apt/sources.list.d/mongodb.list && \
 	# install MongoDB
 	apt-get update && \
-	apt-get install --no-install-recommends --yes \
+	apt-get --no-install-recommends --yes install \
 		"mongodb-org=$MONGODB_VERSION" && \
 	# download/verify/install UniFi network controller
 	curl --remote-name "https://dl.ui.com/unifi/$UNIFI_VERSION/$UNIFI_DEBFILE" && \
