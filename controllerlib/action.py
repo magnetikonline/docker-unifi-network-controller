@@ -1,8 +1,8 @@
 import os
 import tarfile
+from typing import AbstractSet
 
 from controllerlib import docker
-
 
 CONTROLLER_REPOSITORY_NAME = "magnetikonline/unifi-network-controller"
 CONTROLLER_PORT_COMMS = 8080
@@ -20,7 +20,7 @@ BACKUP_ARCHIVE_KEY_FILE_LIST = [
 ]
 
 
-def start_server(image_tag, server_prefix, no_host_network):
+def start_server(image_tag: str, server_prefix: str, no_host_network: bool) -> None:
     # confirm controller Docker image exists, if not pull it
     _image_pull(CONTROLLER_REPOSITORY_NAME, image_tag)
 
@@ -33,7 +33,7 @@ def start_server(image_tag, server_prefix, no_host_network):
     volume_name_data = _volume_data_name(server_prefix)
     volume_name_logs = _volume_logs_name(server_prefix)
 
-    volume_list = dict(docker.volume_list())
+    volume_list = dict(docker.volume_list()).keys()
     _volume_create(volume_name_data, volume_list)
     _volume_create(volume_name_logs, volume_list)
 
@@ -65,7 +65,7 @@ def start_server(image_tag, server_prefix, no_host_network):
     print(f"Running as container ID [{container_id}]")
 
 
-def stop_server(server_prefix):
+def stop_server(server_prefix: str) -> None:
     container_name = _container_server_name(server_prefix)
     container_list = dict(docker.container_list())
 
@@ -86,7 +86,7 @@ def stop_server(server_prefix):
     print("Server has stopped")
 
 
-def backup(server_prefix, archive_dir, archive_name):
+def backup(server_prefix: str, archive_dir: str, archive_name: str) -> None:
     # confirm data volume for backup exists
     volume_name_data = _volume_data_name(server_prefix)
     if volume_name_data not in dict(docker.volume_list()):
@@ -114,7 +114,7 @@ def backup(server_prefix, archive_dir, archive_name):
     print(f"Backup successfully created at [{archive_dir}/{archive_name}]")
 
 
-def _backup_archive_cmd(file):
+def _backup_archive_cmd(file: str) -> str:
     # command to a) create tar archive of data volume b) change ownership to current user
     return (
         f'/bin/tar -czf "{file}" -C "{BACKUP_RESTORE_VOLUME_MOUNT_PATH}" . && '
@@ -122,7 +122,7 @@ def _backup_archive_cmd(file):
     )
 
 
-def restore(server_prefix, archive_dir, archive_name):
+def restore(server_prefix: str, archive_dir: str, archive_name: str) -> None:
     # confirm archive exists/is an archive and contains controller data files
     _restore_verify_archive(f"{archive_dir}/{archive_name}")
 
@@ -175,7 +175,7 @@ def restore(server_prefix, archive_dir, archive_name):
     print(f"Data volume successfully restored from [{archive_dir}/{archive_name}]")
 
 
-def _restore_verify_archive(archive_path):
+def _restore_verify_archive(archive_path: str) -> None:
     # open archive, confirm it's a tar file
     try:
         archive_tar = tarfile.open(archive_path, mode="r")
@@ -197,27 +197,27 @@ def _restore_verify_archive(archive_path):
             f"archive [{archive_path}] doesn't appear to be a controller data backup"
         )
 
-    # archive passed
+    # archive passed verification
 
 
-def _restore_archive_cmd(file):
+def _restore_archive_cmd(file: str) -> str:
     # command to a) move into the root of the Docker vole b) extract tar mounted at host into volume
     return f'cd "{BACKUP_RESTORE_VOLUME_MOUNT_PATH}" && tar -xf "{file}"'
 
 
-def _container_server_name(server_prefix):
+def _container_server_name(server_prefix: str) -> str:
     return f"{server_prefix}-server"
 
 
-def _volume_data_name(server_prefix):
+def _volume_data_name(server_prefix: str) -> str:
     return f"{server_prefix}-data"
 
 
-def _volume_logs_name(server_prefix):
+def _volume_logs_name(server_prefix: str) -> str:
     return f"{server_prefix}-logs"
 
 
-def _image_pull(repository, tag="latest"):
+def _image_pull(repository: str, tag: str = "latest") -> None:
     image_name = f"{repository}:{tag}"
     if image_name in dict(docker.image_list()):
         # no work
@@ -233,7 +233,7 @@ def _image_pull(repository, tag="latest"):
     print("Successfully pulled Docker image")
 
 
-def _volume_create(name, existing_volume_list=[]):
+def _volume_create(name: str, existing_volume_list: AbstractSet[str] = set()) -> None:
     if name in existing_volume_list:
         # no work
         return

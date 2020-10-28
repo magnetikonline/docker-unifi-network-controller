@@ -4,6 +4,7 @@ import argparse
 import os.path
 import re
 import sys
+from typing import Any, Dict, Optional, Tuple
 
 from controllerlib import action, docker
 
@@ -13,12 +14,12 @@ SERVER_PREFIX_DEFAULT = "unifi-network-controller"
 SERVER_PREFIX_ALLOWED_REGEXP = r"^[a-zA-Z0-9][a-zA-Z0-9_-]+[a-zA-Z0-9]$"
 
 
-def exit_error(message):
+def exit_error(message: str) -> None:
     print(f"Error: {message}", file=sys.stderr)
     sys.exit(1)
 
 
-def read_arguments():
+def read_arguments() -> Tuple[str, Dict[str, Any]]:
     # create parser
     parser = argparse.ArgumentParser(
         description="Execution and management for UniFi Network Controller Docker image"
@@ -113,18 +114,20 @@ def read_arguments():
 
     # no command given
     exit_error("no command given, require one of {start,stop,backup,restore}")
+    return ("", {})
 
 
-def load_version():
+def load_version() -> str:
     # load version file
+    line_list = []
     file_path = f"{os.path.dirname(__file__)}/{VERSION_FILE}"
+
     try:
         fh = open(file_path, "r")
+        line_list = fh.readlines()
+        fh.close()
     except OSError:
         exit_error(f"unable to open version file at [{file_path}]")
-
-    line_list = fh.readlines()
-    fh.close()
 
     # scan lines, looking for last version definition
     version = None
@@ -138,6 +141,7 @@ def load_version():
 
     # not found
     exit_error(f"unable to determine image version from [{file_path}]")
+    return ""
 
 
 def main():
@@ -180,7 +184,7 @@ def main():
 
             return
     except action.FatalError as err:
-        exit_error(err)
+        exit_error(str(err))
 
 
 if __name__ == "__main__":

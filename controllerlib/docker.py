@@ -1,15 +1,16 @@
 import json
 import re
 import subprocess
+from typing import Dict, Generator, List, Optional, Tuple, Union
 
 
 DOCKER_CLI_ARG_FORMAT_JSON = "--format={{json .}}"
-_docker_cli_bin = None
+_docker_cli_bin = ""
 
 
-def find_cli():
+def find_cli() -> bool:
     global _docker_cli_bin
-    if _docker_cli_bin is not None:
+    if _docker_cli_bin != "":
         return True
 
     result = _run_command(["which", "docker"])
@@ -22,7 +23,7 @@ def find_cli():
     return True
 
 
-def image_list():
+def image_list() -> Generator[Tuple[str, Dict[str, str]], None, None]:
     _cli_exists()
     result = _run_command([_docker_cli_bin, "images", DOCKER_CLI_ARG_FORMAT_JSON])
     if result.code != 0:
@@ -30,15 +31,18 @@ def image_list():
 
     for image in result.stdout:
         image = json.loads(image)
-        yield f"{image['Repository']}:{image['Tag']}", {
-            "id": image["ID"],
-            "repository": image["Repository"],
-            "size": image["Size"],
-            "tag": image["Tag"],
-        }
+        yield (
+            f"{image['Repository']}:{image['Tag']}",
+            {
+                "id": image["ID"],
+                "repository": image["Repository"],
+                "size": image["Size"],
+                "tag": image["Tag"],
+            },
+        )
 
 
-def container_list():
+def container_list() -> Generator[Tuple[str, Dict[str, str]], None, None]:
     _cli_exists()
     result = _run_command([_docker_cli_bin, "ps", "--all", DOCKER_CLI_ARG_FORMAT_JSON])
     if result.code != 0:
@@ -56,16 +60,19 @@ def container_list():
         container = json.loads(container)
         status = container["Status"]
 
-        yield container["Names"], {
-            "exit_code": exit_code(status),
-            "id": container["ID"],
-            "image": container["Image"],
-            "running": status.startswith("Up "),
-            "status": status,
-        }
+        yield (
+            container["Names"],
+            {
+                "exit_code": exit_code(status),
+                "id": container["ID"],
+                "image": container["Image"],
+                "running": status.startswith("Up "),
+                "status": status,
+            },
+        )
 
 
-def volume_list():
+def volume_list() -> Generator[Tuple[str, Dict[str, str]], None, None]:
     _cli_exists()
     result = _run_command([_docker_cli_bin, "volume", "ls", DOCKER_CLI_ARG_FORMAT_JSON])
     if result.code != 0:
@@ -73,24 +80,24 @@ def volume_list():
 
     for volume in result.stdout:
         volume = json.loads(volume)
-        yield volume["Name"], {"mount_point": volume["Mountpoint"]}
+        yield (volume["Name"], {"mount_point": volume["Mountpoint"]})
 
 
-def image_pull(repository, tag):
+def image_pull(repository: str, tag: str) -> None:
     _cli_exists()
     result = _run_command([_docker_cli_bin, "pull", "--quiet", f"{repository}:{tag}"])
     if result.code != 0:
         raise DockerError("unable to pull image")
 
 
-def volume_create(name):
+def volume_create(name: str) -> None:
     _cli_exists()
     result = _run_command([_docker_cli_bin, "volume", "create", name])
     if result.code != 0:
         raise DockerError("unable to create volume")
 
 
-def volume_delete(name):
+def volume_delete(name: str) -> None:
     _cli_exists()
     result = _run_command([_docker_cli_bin, "volume", "rm", name])
     if result.code != 0:
@@ -98,17 +105,17 @@ def volume_delete(name):
 
 
 def container_run(
-    image_repository,
-    image_tag="latest",
-    bind_list=[],
-    command_arg_list=[],
-    detach=False,
-    name=None,
-    network_host=False,
-    publish_list=[],
-    remove_on_exit=False,
-    volume_list=[],
-):
+    image_repository: str,
+    image_tag: str = "latest",
+    bind_list: List[Tuple[str, str]] = [],
+    command_arg_list: List[str] = [],
+    detach: bool = False,
+    name: Optional[str] = None,
+    network_host: bool = False,
+    publish_list: List[Tuple[int, int]] = [],
+    remove_on_exit: bool = False,
+    volume_list: List[Tuple[str, str]] = [],
+) -> Union[bool, str]:
     _cli_exists()
 
     # build run arguments
@@ -154,19 +161,11 @@ def container_run(
     return False
 
 
-def container_stop(name):
+def container_stop(name: str) -> None:
     _cli_exists()
     result = _run_command([_docker_cli_bin, "stop", name])
     if result.code != 0:
         raise DockerError("unable to stop container")
-
-
-def _run_command(argument_list):
-    result = subprocess.run(
-        argument_list, encoding="utf-8", stderr=subprocess.PIPE, stdout=subprocess.PIPE
-    )
-
-    return _RunCommandResult(result.returncode, result.stdout, result.stderr)
 
 
 class _RunCommandResult:
@@ -184,7 +183,15 @@ class _RunCommandResult:
         self.stderr = split(stderr)
 
 
-def _cli_exists():
+def _run_command(argument_list: List[str]) -> _RunCommandResult:
+    result = subprocess.run(
+        argument_list, encoding="utf-8", stderr=subprocess.PIPE, stdout=subprocess.PIPE
+    )
+
+    return _RunCommandResult(result.returncode, result.stdout, result.stderr)
+
+
+def _cli_exists() -> None:
     if not find_cli():
         raise DockerError("unable to locate Docker CLI")
 
