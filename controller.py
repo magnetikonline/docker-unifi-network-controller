@@ -4,7 +4,7 @@ import argparse
 import os.path
 import re
 import sys
-from typing import Any, Dict, Optional, Tuple
+from typing import Any, Dict, Tuple
 
 from controllerlib import action, docker
 
