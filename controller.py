@@ -8,7 +8,6 @@ from typing import Any, Dict, Tuple
 
 from controllerlib import action, docker
 
-
 VERSION_FILE = "version"
 SERVER_PREFIX_DEFAULT = "unifi-network-controller"
 SERVER_PREFIX_ALLOWED_REGEXP = r"^[a-zA-Z0-9][a-zA-Z0-9_-]+[a-zA-Z0-9]$"

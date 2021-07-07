@@ -3,7 +3,6 @@ import re
 import subprocess
 from typing import Dict, Generator, List, Optional, Tuple, Union
 
-
 DOCKER_CLI_ARG_FORMAT_JSON = "--format={{json .}}"
 _docker_cli_bin = ""
 
