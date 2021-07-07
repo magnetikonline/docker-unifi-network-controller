@@ -49,7 +49,7 @@ $ docker run \
 	--publish "8080:8080/tcp" \
 	--publish "8443:8443/tcp" \
 	--rm \
-	"magnetikonline/unifi-network-controller:5.14.23"
+		"magnetikonline/unifi-network-controller:5.14.23"
 ```
 
 Published ports are for the following functions:
@@ -79,7 +79,7 @@ $ docker run \
 	--publish "8080:8080/tcp" \
 	--publish "8443:8443/tcp" \
 	--rm \
-	"magnetikonline/unifi-network-controller:5.14.23"
+		"magnetikonline/unifi-network-controller:5.14.23"
 ```
 
 Or avoid all this boilerplate and use instead the [Controller utility](#controller-utility) outlined below.
