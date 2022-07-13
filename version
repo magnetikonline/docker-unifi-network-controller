@@ -1,4 +1,4 @@
-MONGODB_VERSION="3.4.20"
+MONGODB_VERSION="3.4.24"
 
 # https://community.ui.com/releases/UniFi-Network-Controller-5-14-23/daf90732-30ad-48ee-81e7-1dcb374eba2a
 UNIFI_MD5SUM="fdb42ada26b65ceddd86116a775492d3"
