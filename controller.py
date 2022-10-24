@@ -4,7 +4,7 @@ import argparse
 import os.path
 import re
 import sys
-from typing import Any, Dict, Tuple
+from typing import Any
 
 from controllerlib import action, docker
 
@@ -18,7 +18,7 @@ def exit_error(message: str) -> None:
     sys.exit(1)
 
 
-def read_arguments() -> Tuple[str, Dict[str, Any]]:
+def read_arguments() -> tuple[str, dict[str, Any]]:
     # create parser
     parser = argparse.ArgumentParser(
         description="Execution and management for UniFi Network Controller Docker image"

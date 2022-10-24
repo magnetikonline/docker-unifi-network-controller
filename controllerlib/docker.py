@@ -1,7 +1,7 @@
 import json
 import re
 import subprocess
-from typing import Dict, Generator, List, Optional, Tuple, Union
+from typing import Generator, Optional, Union
 
 DOCKER_CLI_ARG_FORMAT_JSON = "--format={{json .}}"
 _docker_cli_bin = ""
@@ -22,7 +22,7 @@ def find_cli() -> bool:
     return True
 
 
-def image_list() -> Generator[Tuple[str, Dict[str, str]], None, None]:
+def image_list() -> Generator[tuple[str, dict[str, str]], None, None]:
     _cli_exists()
     result = _run_command([_docker_cli_bin, "images", DOCKER_CLI_ARG_FORMAT_JSON])
     if result.code != 0:
@@ -41,7 +41,7 @@ def image_list() -> Generator[Tuple[str, Dict[str, str]], None, None]:
         )
 
 
-def container_list() -> Generator[Tuple[str, Dict[str, str]], None, None]:
+def container_list() -> Generator[tuple[str, dict[str, str]], None, None]:
     _cli_exists()
     result = _run_command([_docker_cli_bin, "ps", "--all", DOCKER_CLI_ARG_FORMAT_JSON])
     if result.code != 0:
@@ -71,7 +71,7 @@ def container_list() -> Generator[Tuple[str, Dict[str, str]], None, None]:
         )
 
 
-def volume_list() -> Generator[Tuple[str, Dict[str, str]], None, None]:
+def volume_list() -> Generator[tuple[str, dict[str, str]], None, None]:
     _cli_exists()
     result = _run_command([_docker_cli_bin, "volume", "ls", DOCKER_CLI_ARG_FORMAT_JSON])
     if result.code != 0:
@@ -106,14 +106,14 @@ def volume_delete(name: str) -> None:
 def container_run(
     image_repository: str,
     image_tag: str = "latest",
-    bind_list: List[Tuple[str, str]] = [],
-    command_arg_list: List[str] = [],
+    bind_list: list[tuple[str, str]] = [],
+    command_arg_list: list[str] = [],
     detach: bool = False,
     name: Optional[str] = None,
     network_host: bool = False,
-    publish_list: List[Tuple[int, int]] = [],
+    publish_list: list[tuple[int, int]] = [],
     remove_on_exit: bool = False,
-    volume_list: List[Tuple[str, str]] = [],
+    volume_list: list[tuple[str, str]] = [],
 ) -> Union[bool, str]:
     _cli_exists()
 
@@ -182,7 +182,7 @@ class _RunCommandResult:
         self.stderr = split(stderr)
 
 
-def _run_command(argument_list: List[str]) -> _RunCommandResult:
+def _run_command(argument_list: list[str]) -> _RunCommandResult:
     result = subprocess.run(
         argument_list, encoding="utf-8", stderr=subprocess.PIPE, stdout=subprocess.PIPE
     )
