@@ -1,7 +1,7 @@
 import json
 import re
 import subprocess
-from typing import Generator, Optional, Union
+from typing import Generator, Optional
 
 DOCKER_CLI_ARG_FORMAT_JSON = "--format={{json .}}"
 _docker_cli_bin = ""
@@ -114,7 +114,7 @@ def container_run(
     publish_list: list[tuple[int, int]] = [],
     remove_on_exit: bool = False,
     volume_list: list[tuple[str, str]] = [],
-) -> Union[bool, str]:
+) -> bool | str:
     _cli_exists()
 
     # build run arguments
