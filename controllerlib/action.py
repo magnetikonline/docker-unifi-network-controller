@@ -117,7 +117,7 @@ def backup(server_prefix: str, archive_dir: str, archive_name: str) -> None:
 def _backup_archive_cmd(file: str) -> str:
     # command to a) create tar archive of data volume b) change ownership to current user
     return (
-        f'/bin/tar -czf "{file}" -C "{BACKUP_RESTORE_VOLUME_MOUNT_PATH}" . && '
+        f'/bin/tar c -zf "{file}" -C "{BACKUP_RESTORE_VOLUME_MOUNT_PATH}" . && '
         f'chown {os.getuid()}:{os.getgid()} "{file}"'
     )
 
@@ -202,7 +202,7 @@ def _restore_verify_archive(archive_path: str) -> None:
 
 def _restore_archive_cmd(file: str) -> str:
     # command to a) move into the root of the Docker vole b) extract tar mounted at host into volume
-    return f'cd "{BACKUP_RESTORE_VOLUME_MOUNT_PATH}" && tar -xf "{file}"'
+    return f'cd "{BACKUP_RESTORE_VOLUME_MOUNT_PATH}" && tar x -f "{file}"'
 
 
 def _container_server_name(server_prefix: str) -> str:
