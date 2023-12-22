@@ -201,7 +201,7 @@ def _restore_verify_archive(archive_path: str) -> None:
 
 
 def _restore_archive_cmd(file: str) -> str:
-    # command to a) move into the root of the Docker vole b) extract tar mounted at host into volume
+    # command to a) move into the root of the Docker volume b) extract tar mounted at host into volume
     return f'cd "{BACKUP_RESTORE_VOLUME_MOUNT_PATH}" && tar x -f "{file}"'
 
 
