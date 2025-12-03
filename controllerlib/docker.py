@@ -1,7 +1,7 @@
 import json
 import re
 import subprocess
-from typing import Generator
+from collections.abc import Generator
 
 DOCKER_CLI_ARG_FORMAT_JSON = "--format={{json .}}"
 _docker_cli_bin = ""
@@ -22,7 +22,7 @@ def find_cli() -> bool:
     return True
 
 
-def image_list() -> Generator[tuple[str, dict[str, str]], None, None]:
+def image_list() -> Generator[tuple[str, dict[str, str]]]:
     _cli_exists()
     result = _run_command([_docker_cli_bin, "images", DOCKER_CLI_ARG_FORMAT_JSON])
     if result.code != 0:
@@ -41,7 +41,7 @@ def image_list() -> Generator[tuple[str, dict[str, str]], None, None]:
         )
 
 
-def container_list() -> Generator[tuple[str, dict[str, str]], None, None]:
+def container_list() -> Generator[tuple[str, dict[str, str]]]:
     _cli_exists()
     result = _run_command([_docker_cli_bin, "ps", "--all", DOCKER_CLI_ARG_FORMAT_JSON])
     if result.code != 0:
@@ -71,7 +71,7 @@ def container_list() -> Generator[tuple[str, dict[str, str]], None, None]:
         )
 
 
-def volume_list() -> Generator[tuple[str, dict[str, str]], None, None]:
+def volume_list() -> Generator[tuple[str, dict[str, str]]]:
     _cli_exists()
     result = _run_command([_docker_cli_bin, "volume", "ls", DOCKER_CLI_ARG_FORMAT_JSON])
     if result.code != 0:
